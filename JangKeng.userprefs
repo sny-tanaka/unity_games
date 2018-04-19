@@ -1,0 +1,16 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\ButtleManager_vsNPC.cs">
+    <Files>
+      <File FileName="Assets\Scripts\ButtleManager_vsNPC.cs" Line="40" Column="20" />
+      <File FileName="Assets\Scripts\HPbarController.cs" Line="62" Column="3" />
+      <File FileName="Assets\Scripts\DisplayHand.cs" Line="16" Column="39" />
+      <File FileName="Assets\Scripts\skill.cs" Line="19" Column="15" />
+      <File FileName="Assets\Scripts\CharacterSet.cs" Line="55" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
