@@ -20,6 +20,9 @@ public class CharacterSet : MonoBehaviour {
 	public string[] skillNames = new string[4];
 	public int[] skillpows = new int[4];
 
+	// ボイスの設定
+	public AudioClip[] voice = new AudioClip[10];
+
 	void Start(){
 		// CSVReader取得
 		CSVReader csvReader = GameObject.Find("CSVReader").GetComponent<CSVReader>();
@@ -57,5 +60,10 @@ public class CharacterSet : MonoBehaviour {
 		// 画像をフォルダから探して設定
 		Texture2D texture = Resources.Load("images/" + personalMonsterDatas[1]) as Texture2D;
 		GetComponent<Image> ().sprite = Sprite.Create (texture, new Rect (0, 0, texture.width, texture.height), Vector2.zero);
+
+		// ボイスをフォルダから探して設定
+		for (int i=0; i<10; i++){
+			voice[i] = Resources.Load("Voices/"+personalMonsterDatas[1]+"_"+i.ToString(),typeof(AudioClip)) as AudioClip;
+		}
 	}
 }

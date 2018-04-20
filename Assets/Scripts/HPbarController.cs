@@ -55,6 +55,7 @@ public class HPbarController : MonoBehaviour {
 	}
 	
 	public void barDecrease(){
+
 		// Playerの場合はテキストの値を更新する
 		if (ifPlayer) {
 			text.text = hp.ToString ();
@@ -70,10 +71,47 @@ public class HPbarController : MonoBehaviour {
 	IEnumerator subBarDecrease(){
 		// 現在HPの値になるまで徐々に減らす
 		float f = subSlider.value;
-		while (f != hp){
-			f -= 1;
+		float fd = (f - hp) / 100.0f;
+		while (f > hp){
+			f -= fd;
 			subSlider.value = f;
-			yield return 0;
+			yield return null;
 		}
+		nextDmg();
+	}
+	void nextDmg(){
+		int id = GameObject.Find("ButtleManager").GetComponent<ButtleManager_vsNPC>().id;
+		if (id == 2) {
+			GameObject.Find("ButtleManager").GetComponent<ButtleManager_vsNPC>().id = 0;
+			GameObject.Find ("ButtleManager").GetComponent<ButtleManager_vsNPC> ().dmgFin();
+		} else {
+			GameObject.Find("ButtleManager").GetComponent<ButtleManager_vsNPC>().id += 1;
+			GameObject.Find ("ButtleManager").GetComponent<ButtleManager_vsNPC> ().damageCulc();
+		}
+	}
+
+	public void barIncrease(){
+		// Playerの場合はテキストの値を更新する
+		if (ifPlayer) {
+			text.text = hp.ToString ();
+		}
+
+		// サブゲージを即現在HPに変更する
+		subSlider.value = hp;
+
+		// メインゲージを増やすコルーチンを呼びだす
+		StartCoroutine ("mainBarIncrease");
+	}
+
+	IEnumerator mainBarIncrease(){
+		// 現在HPの値になるまで徐々に増やす
+		float f = mainSlider.value;
+		float fd = (hp - f) / 100.0f;
+		while (f < hp){
+			f += fd;
+			mainSlider.value = f;
+			yield return null;
+		}
+		nextDmg();
 	}
 }

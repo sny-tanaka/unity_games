@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unity_games", "Assembly-CSharp.csproj", "{2AEB2344-7C0C-6EB4-25DE-B482D44BFCFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AEB2344-7C0C-6EB4-25DE-B482D44BFCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AEB2344-7C0C-6EB4-25DE-B482D44BFCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AEB2344-7C0C-6EB4-25DE-B482D44BFCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AEB2344-7C0C-6EB4-25DE-B482D44BFCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
