@@ -63,7 +63,7 @@ public class CharacterSet : MonoBehaviour {
 
 		// ボイスをフォルダから探して設定
 		for (int i=0; i<10; i++){
-			voice[i] = Resources.Load("Voices/"+personalMonsterDatas[1]+"_"+i.ToString(),typeof(AudioClip)) as AudioClip;
+			voice[i] = Resources.Load("Voices/"+personalMonsterDatas[1]+"_"+i.ToString()) as AudioClip;
 		}
 	}
 }

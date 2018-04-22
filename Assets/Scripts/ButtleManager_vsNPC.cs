@@ -23,15 +23,20 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 	// 終了フラグ
 	bool finishFlag = true;
 
-	// オーディオ再生オブジェクト
+	// ボイス再生オブジェクト
 	public AudioSource voiceSource;
+
+	// 勝利サウンド
+	public AudioSource victory;
+
+	// ゲームオーバーサウンド
+	public AudioSource gameover;
 
 	void Start(){
 		// Playerの中からランダムで戦闘開始時のボイスを再生
 		int i = Random.Range(1, 4);
 		voiceSource.clip = GameObject.Find("Player"+i.ToString()).GetComponent<CharacterSet>().voice[7];
 		voiceSource.Play();
-		voiceSource.clip = null;
 		
 		// バトルスタート
 		StartCoroutine("buttleRunning");
@@ -191,17 +196,16 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 		string nam = atkSide.skillNames[handType-1];
 
 		// スキル名の表示
-		GameObject inst = Instantiate((GameObject)Resources.Load ("Prefabs/CutIn_bg"), Vector3.zero, Quaternion.identity);
+		GameObject inst = Instantiate((GameObject)Resources.Load ("Prefabs/CutIn_bg"), new Vector2(0, -200), Quaternion.Euler(0, 0, 30));
 		inst.transform.GetChild(0).GetComponent<Text>().text = nam;
 		inst.transform.SetParent (GameObject.Find ("CutInField").transform, false);
-		Destroy(inst, 1.5f);
+		Destroy(inst, 1.0f);
 
 		// 回復技のときの処理
 		if (pow < 0){
 			// ボイスの再生
 			voiceSource.clip = atkSide.voice[5];
 			voiceSource.Play();
-			voiceSource.clip = null;
 
 			// 基礎回復量
 			float recovery = -1.0f * atk * atk * pow * rand;
@@ -216,6 +220,9 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 			// 小数点以下切り捨て
 			int rec = (int)recovery;
 			Debug.Log ("回復:"+rec.ToString());
+
+			// SEを鳴らす
+
 
 			// HPを増やす
 			if (WoL [id] == 1) {
@@ -240,8 +247,7 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 
 		// 攻撃ボイスの再生
 		voiceSource.clip = atkSide.voice[handType];
-		voiceSource.Play();
-		voiceSource.clip = null;
+		voiceSource.PlayOneShot(atkSide.voice[handType], 1.0f);
 
         // 基本ダメージ
 		originalDmg = 1.0f * atk * atk * pow * rand;
@@ -268,7 +274,6 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 		// 被ダメボイスの再生
 		voiceSource.clip = defSide.voice[6];
 		voiceSource.Play();
-		voiceSource.clip = null;
 
 		// HPを減らす
 		if (WoL [id] == 1) {
@@ -316,11 +321,27 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 	// HPがゼロかどうかの判定
 	void deathJudge(){
 		if (GameObject.Find ("EnemyHP").GetComponent<HPbarController> ().hp <= 0) {
+			// BGMを止める
+			GameObject.Find("BGM").GetComponent<AudioSource>().Stop();
+
+			// 勝利サウンドを流す
+			victory.Play();
+
 			// 勝ち
 			Debug.Log("You Win!");
 			finishFlag = false;
 			return;
 		} else if (GameObject.Find ("PlayerHP").GetComponent<HPbarController> ().hp <= 0) {
+			// BGMを止める
+			GameObject.Find("BGM").GetComponent<AudioSource>().Stop();
+
+			// ゲームオーバーサウンドを流す
+			gameover.Play();
+
+			// 画面を暗くする
+			GameObject inst = Instantiate((GameObject)Resources.Load ("Prefabs/mask_bg"), Vector2.zero, Quaternion.identity);
+			inst.transform.SetParent (GameObject.Find ("CutInField").transform, false);
+
 			// 負け
 			Debug.Log("You Lose");
 			finishFlag = false;

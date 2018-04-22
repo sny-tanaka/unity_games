@@ -26,6 +26,8 @@ public class HPbarController : MonoBehaviour {
 	public int maxHp;
 	public int hp;
 
+	public AudioSource se;
+
 	void Start () {
 		// maxHPの取得
 		for (int i = 0; i < charaSet.Length; i++) {
@@ -60,6 +62,9 @@ public class HPbarController : MonoBehaviour {
 		if (ifPlayer) {
 			text.text = hp.ToString ();
 		}
+
+		// SEを鳴らす
+		se.Play();
 
 		// メインゲージを即現在HPに変更する
 		mainSlider.value = hp;
