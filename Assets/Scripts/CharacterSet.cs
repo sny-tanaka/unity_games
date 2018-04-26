@@ -9,6 +9,8 @@ public class CharacterSet : MonoBehaviour {
 	public bool ifPlayer;
 	public int personalMonsterID;
 
+	public int monsterID;
+
 	// 各種ステータス
 	public string monsterName;
 	public int type;
@@ -39,6 +41,7 @@ public class CharacterSet : MonoBehaviour {
 		lv = int.Parse(personalMonsterDatas[2]);
 
 		// MonsterからMonsterIDの行を配列として取得
+		monsterID = int.Parse(personalMonsterDatas[1]);
 		string[] monsterDatas = csvReader.CSVReadLine("Monster", int.Parse(personalMonsterDatas[1]));
 
 		// monsterDatasとpersonalMonsterDatasからステータスを算出

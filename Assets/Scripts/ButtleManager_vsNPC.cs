@@ -9,6 +9,7 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 	public int id = 0;
 	public int[] playerChoicedHands = new int[3];
     public int enemyChoicedHand;
+	public int nextEnemyHand;
 
 	// ターン数
 	int turn = 0;
@@ -57,6 +58,12 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 		turn += 1;
 		GameObject.Find("Text_TurnCount").GetComponent<Text>().text = "ターン"+turn.ToString();
 		playerCommand ();
+
+		// nextEnemyHandに値があれば表示する
+		if (nextEnemyHand != 0) {
+			Texture2D texture = Resources.Load ("TypeIcons/" + nextEnemyHand.ToString ()) as Texture2D;
+			GameObject.Find ("NextEnemyHand").GetComponent<Image> ().sprite = Sprite.Create (texture, new Rect (0, 0, texture.width, texture.height), Vector2.zero);
+		}
     }
 
 	// Playerにコマンド選択させる
@@ -117,10 +124,15 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 
     // NPCの出手を決める
     void enemyRandomHand(){
-        // enemyの手をランダムで決める
-        int h = Random.Range(2, 5);
-        enemyChoicedHand = h;
-
+		// nextEnemyHandに値があればそれを出す
+		if (nextEnemyHand != 0) {
+			enemyChoicedHand = nextEnemyHand;
+			nextEnemyHand = 0;
+			GameObject.Find ("NextEnemyHand").GetComponent<Image> ().sprite = null;
+		} else {
+			// enemyの手をランダムで決める
+			enemyChoicedHand = Random.Range (2, 5);
+		}
 		displayHands ();
     }
 
@@ -140,8 +152,54 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 		for (int i = 0; i < 3; i++) {
 			WoL [i] = judgingDeadlock (playerChoicedHands [i], enemyChoicedHand);
 		}
-		damageCulc ();
+		StartCoroutine("specialPaformance");
     }
+
+	// 全員が勝ったときの特別演出
+	IEnumerator specialPaformance(){
+		if (WoL [0] == 1 && WoL [1] == 1 && WoL [2] == 1) {
+			GameObject inst1 = Instantiate((GameObject)Resources.Load ("Prefabs/CutIn1"), new Vector3(0, 0, 0), Quaternion.identity);
+			Texture2D texture = Resources.Load("CutIn/" + GameObject.Find("Player1").GetComponent<CharacterSet>().monsterID.ToString()) as Texture2D;
+			Transform sp1 = inst1.transform.GetChild (0);
+			sp1.GetComponent<Image> ().sprite = Sprite.Create (texture, new Rect (0, 0, texture.width, texture.height), Vector3.zero);
+			inst1.transform.SetParent (GameObject.Find ("CutInField").transform, false);
+			sp1.localPosition = new Vector3 (-200.0f, 0f, 0f);
+			for (int i = 0; i < 25; i++) {
+				sp1.localPosition += new Vector3 (8f, 0f, 0f);
+				yield return null;
+			}
+			yield return new WaitForSeconds (1.0f);
+
+			GameObject inst2 = Instantiate((GameObject)Resources.Load ("Prefabs/CutIn2"), new Vector3(0, -120, 0), Quaternion.identity);
+			Texture2D texture2 = Resources.Load("CutIn/" + GameObject.Find("Player2").GetComponent<CharacterSet>().monsterID.ToString()) as Texture2D;
+			Transform sp2 = inst2.transform.GetChild (0);
+			sp2.GetComponent<Image> ().sprite = Sprite.Create (texture2, new Rect (0, 0, texture2.width, texture2.height), Vector3.zero);
+			inst2.transform.SetParent (GameObject.Find ("CutInField").transform, false);
+			sp2.localPosition = new Vector3 (-200.0f, 0f, 0f);
+			for (int i = 0; i < 25; i++) {
+				sp2.localPosition += new Vector3 (8f, 0f, 0f);
+				yield return null;
+			}
+			yield return new WaitForSeconds (1.0f);
+
+			GameObject inst3 = Instantiate((GameObject)Resources.Load ("Prefabs/CutIn3"), new Vector3(0, -240, 0), Quaternion.identity);
+			Texture2D texture3 = Resources.Load("CutIn/" + GameObject.Find("Player3").GetComponent<CharacterSet>().monsterID.ToString()) as Texture2D;
+			Transform sp3 = inst3.transform.GetChild (0);
+			sp3.GetComponent<Image> ().sprite = Sprite.Create (texture3, new Rect (0, 0, texture3.width, texture3.height), Vector3.zero);
+			inst3.transform.SetParent (GameObject.Find ("CutInField").transform, false);
+			sp3.localPosition = new Vector3 (-200.0f, 0f, 0f);
+			for (int i = 0; i < 25; i++) {
+				sp3.localPosition += new Vector3 (8f, 0f, 0f);
+				yield return null;
+			}
+			yield return new WaitForSeconds (1.0f);
+
+			Destroy (inst1);
+			Destroy (inst2);
+			Destroy (inst3);
+		}
+		damageCulc ();
+	}
 
     // ダメージ計算
     public void damageCulc(){
@@ -259,12 +317,18 @@ public class ButtleManager_vsNPC : MonoBehaviour {
             originalDmg *= 1.2f;
         }
 
-        // 弱点・耐性ボーナス
-        int chemi = judgingDeadlock(atkType, defType);
-        if (chemi == 1){
-            originalDmg *= 1.5f;
-        } else if (chemi == 2){
-            originalDmg *= 0.8f;
+		// 全員が勝利していたらダメージ2倍
+		if (WoL [0] == 1 && WoL [1] == 1 && WoL [2] == 1) {
+			originalDmg *= 2.0f;
+		}
+
+        // 弱点をついて敵の手が透ける処理
+		if (WoL [id] == 1) {
+        	int chemi = judgingDeadlock(handType, defType);
+			if (chemi == 1) {
+				// 次の相手の手が表示される
+				nextEnemyHand = Random.Range (2, 5);
+			}
         }
 
         // 小数点以下切り捨て
