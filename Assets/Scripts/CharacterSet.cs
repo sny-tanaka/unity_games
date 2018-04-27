@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CharacterSet : MonoBehaviour {
 
 	// 外部から設定する
-	public bool ifPlayer;
+	public bool isPlayer;
 	public int personalMonsterID;
 
 	public int monsterID;
@@ -36,7 +36,7 @@ public class CharacterSet : MonoBehaviour {
 
 		// PlayerMonsterもしくはEnemyMonsterからplayerMonsterIDの行だけを配列として取得
 		string[] personalMonsterDatas;
-		if (ifPlayer){
+		if (isPlayer){
 			personalMonsterDatas = csvReader.CSVReadLine("PlayerMonster", personalMonsterID);
 		} else {
 			personalMonsterDatas = csvReader.CSVReadLine("EnemyMonster", personalMonsterID);
@@ -87,16 +87,21 @@ public class CharacterSet : MonoBehaviour {
 		if (activeGage.GetComponent<Slider> ().value >= activeGage.GetComponent<Slider> ().maxValue) {
 			// アクション中にする
 			GameObject.Find ("ButtleManager").GetComponent<ButtleManager_vsNPC> ().isActionNow = true;
-			// アクション処理
 
 			// ゲージを0にする
 			activeGage.GetComponent<Slider> ().value = 0;
 
-			// アクション中を解除
-			GameObject.Find ("ButtleManager").GetComponent<ButtleManager_vsNPC> ().isActionNow = false;
-
-			// 一旦終了
-			return null;
+			// プレイヤーか敵かで処理を分岐
+			if (isPlayer) {
+				// 自分をフォーカスする
+				SkillSet();
+				return null;
+			} else {
+				int target = Random.Range(1, 4);
+				// targetしたプレイヤーをフォーカスする
+				GameObject.Find ("Player"+target.ToString()).GetComponent<CharacterSet> ().SkillSet();
+				return null;
+			}
 		}
 		if (GameObject.Find ("ButtleManager").GetComponent<ButtleManager_vsNPC> ().isActionNow) {
 			// 何もしない
@@ -105,5 +110,12 @@ public class CharacterSet : MonoBehaviour {
 			// アクティブゲージを進める
 			activeGage.GetComponent<Slider> ().value += gageSpeed;
 		}
+	}
+	
+	// 自分の行動時、技ボタンに自分のスキルをセットする
+	void SkillSet(){
+		// 自分をフォーカスする
+		
+		// 各ボタンにスキルをセット
 	}
 }
