@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +10,9 @@ public class ButtleManager_vsNPC : MonoBehaviour {
 	public int[] playerChoicedHands = new int[3];
     public int enemyChoicedHand;
 	public int nextEnemyHand;
+
+	// 誰かのターン中かどうか
+	public bool isActionNow;
 
 	// ターン数
 	int turn = 0;
