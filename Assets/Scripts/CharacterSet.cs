@@ -21,7 +21,7 @@ public class CharacterSet : MonoBehaviour {
 
 	// 技の設定
 	public string[] skillNames = new string[4];
-	public int[] skillpows = new int[4];
+	public int[] skillPows = new int[4];
 
 	// ボイスの設定
 	public AudioClip[] voice = new AudioClip[10];
@@ -29,6 +29,9 @@ public class CharacterSet : MonoBehaviour {
 	// アクティブゲージ
 	public GameObject activeGage;
 	public float gageSpeed;
+	
+	// 禁じ手ゲージ
+	public int specialPoint;
 
 	void Start(){
 		// CSVReader取得
@@ -63,7 +66,7 @@ public class CharacterSet : MonoBehaviour {
 		for (int i=0; i<4; i++){
 			string[] skillDatas = csvReader.CSVReadLine("Skill", int.Parse(personalMonsterDatas[i+7]));
 			skillNames[i] = skillDatas[1];
-			skillpows[i] = int.Parse(skillDatas[3]);
+			skillPows[i] = int.Parse(skillDatas[3]);
 		}
 
 		// 画像をフォルダから探して設定
@@ -97,7 +100,10 @@ public class CharacterSet : MonoBehaviour {
 				SkillSet();
 				return null;
 			} else {
+				// 攻撃対象をランダム選択
 				int target = Random.Range(1, 4);
+				// 対象へターゲットマーカーを表示
+				
 				// targetしたプレイヤーをフォーカスする
 				GameObject.Find ("Player"+target.ToString()).GetComponent<CharacterSet> ().SkillSet();
 				return null;
